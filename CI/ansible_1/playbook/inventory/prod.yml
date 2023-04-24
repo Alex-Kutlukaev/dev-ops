@@ -1,0 +1,14 @@
+
+---
+  el:
+    hosts:
+      debian:
+        ansible_host: 10.211.55.9
+  deb:
+    hosts:
+      ubuntu:
+        ansible_host: 10.211.55.7
+  local:
+    hosts:
+      localhost:
+        ansible_conection: local
