@@ -27,6 +27,11 @@ resource "yandex_compute_instance" "web" {
     subnet_id = yandex_vpc_subnet.develop.id
     nat       = true
   }
+  provisioner "file" {
+    source      = "./id_rsa.pub"
+    destination = "/root/.ssh/id_rsa.pub"
+  }
 }
+
 
 

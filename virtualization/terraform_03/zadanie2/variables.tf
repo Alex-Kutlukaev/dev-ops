@@ -35,9 +35,37 @@ variable "vpc_name1" {
   default     = "develop1"
   description = "VPC network&subnet name"
 }
-variable "vm_names" {
-  description = "VM Names"
-  default     = ["vm_1","vm_2"]
-  type        = set(string)
-}
 
+variable "vms" {
+  type = list(object({
+    vm_name = string
+    cores     =  number
+    memory     = number
+    disk       = number
+  }))
+  default = [
+    {
+      vm_name = "vm1_test"
+      cores   = 4
+      memory  = 4
+      disk    = 4
+    },
+    {
+      vm_name = "vm2_test"
+      cores     = 6
+      memory     = 6
+      disk      = 6
+    }
+  ]
+}
+variable "vms_ssh_root_key" {
+  type        = string
+  default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC68tSv0b6MTqfC5/hFL7wHQNn+znkaVx9yqvBDwxirw5emd5b8btXSdHpT70xVMPky6ILAU81m3siyw3NKn6MIXTldsQPSOf2FD5wMPmlYOQQ7b2gnmhugD43ebAssZhMSE+jRrh09UNA0vJlI0+qa4nErIQWEzPx5X3WTcU2FuzElpTrwIf9vmeLgNRrqE+IyRtsZDRxYvsSvkWTi0ELyM7LbXV25yCEZ4pwQETTB/WSolI3GIEeO9IXx9bdCDJUyh0h6Zw5EpjtM4yDnLCid4SzWutoKVtgLA4IPceV0mDEw86GFa0TSwHSW9NM1GNRmxHaIbDcfMy5b+mo6Xh62qDEosSB4pl5lXGbQG3p1k1pHq1vU138vb7hNHbs/9t4XkfYuR6uuJkCh9hUk64lX5yk1+AkIM3lGolkdPYvF/cWIdVuZCaDJdmvR6Rh5eU1iVWK4NVSvkhQ8mUDrzCxvRUkznufLbwpUeab3CmYVORC3x27Ww1ib6HuJnTf7dac= alekseykutlukaev@MacBook-Pro-Aleksej.local"
+}
+variable "connect" {
+  type = map
+  default = {
+    serial-port-enable = "1"
+    ssh-keys = "ubuntu:var.vms_ssh_root_key}"
+  }
+}

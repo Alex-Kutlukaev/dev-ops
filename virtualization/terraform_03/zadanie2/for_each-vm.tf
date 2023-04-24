@@ -13,11 +13,17 @@ data "yandex_compute_image" "ubuntu1" {
 }
 
 resource "yandex_compute_instance" "vm" {
-  for_each    = toset(var.vm_names)
-  name        = each.value
-  platform_id = "standard-v1"
+  for_each = {
+  for i, vm in var.vms : vm.vm_name => {
+    name = "vm-${vm.vm_name}"
+    cores = vm.cores
+    memory = vm.memory
+    disk   = vm.disk
+}
+  }
   resources {
-
+    cores    = each.value.cores
+    memory = each.value.memory
   }
   boot_disk {
     initialize_params {
@@ -26,7 +32,26 @@ resource "yandex_compute_instance" "vm" {
   }
   network_interface {
     subnet_id = yandex_vpc_subnet.develop1.id
-    nat       = true
+    nat = true
+  }
+  provisioner "file" {
+    source = "./id_rsa.pub"
+    destination = "/root/.ssh/id_rsa.pub"
+}
+  connection {
+type = "ssh"
+user = "ubuntu"
+private_key = "~/ssh/id_rsa"
+    host = "self.public_ip"
+}
+  metadata = {
+    serial-port-enable = var.connect.serial-port-enable
+    ssh-keys           = var.connect.ssh-keys
   }
 
+depends_on = [
+    yandex_compute_instance.web
+  ]
 }
+
+
