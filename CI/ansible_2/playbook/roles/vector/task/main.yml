@@ -1,5 +1,0 @@
----
-- name: Install Vector
-  become: true
-  ansible.builtin.apt:
-    deb: https://packages.timber.io/vector/0.29.1/vector_0.29.1-1_arm64.deb
